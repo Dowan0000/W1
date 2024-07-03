@@ -10,10 +10,13 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
+#include "Kismet/GameplayStatics.h"
 //#include "Net/UnrealNetwork.h"
 
+#include "W1GameMode.h"
 #include "StickPre.h"
 #include "Stick.h"
+#include "ConnectStick.h"
 
 AW1Character::AW1Character()
 {
@@ -54,6 +57,8 @@ void AW1Character::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	W1GameMode = Cast<AW1GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 void AW1Character::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -183,7 +188,8 @@ void AW1Character::ResSpawnStick_Implementation(FVector Location)
 {
 	FActorSpawnParameters SpawnParameter;
 
-	GetWorld()->SpawnActor<AStick>(StickClass, Location, FRotator(0.f, 0.f, 0.f), SpawnParameter);
+	AStick* Stick = GetWorld()->SpawnActor<AStick>(StickClass, Location, FRotator(0.f, 0.f, 0.f), SpawnParameter);
+	Stick->SetCharacter(this);
 }
 
 void AW1Character::LookOnBuilding(FVector2D Value)
@@ -201,4 +207,13 @@ void AW1Character::LookOnBuilding(FVector2D Value)
 	Location += RightDirection * 3.f * Value.X;
 
 	StickPre->SetActorLocation(Location);
+}
+
+void AW1Character::CheckArea(AConnectStick* NewConnectStick)
+{
+
+
+	
+
+	//W1GameMode->SetArea(this, ConnectSticks);
 }

@@ -6,6 +6,10 @@
 #include "GameFramework/GameModeBase.h"
 #include "W1GameMode.generated.h"
 
+struct Point {
+	double x, y;
+};
+
 UCLASS(minimalapi)
 class AW1GameMode : public AGameModeBase
 {
@@ -13,6 +17,33 @@ class AW1GameMode : public AGameModeBase
 
 public:
 	AW1GameMode();
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
+	TArray<class AW1Point*> AllPoints;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<class AConnectStick*> ConnectSticks;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bSetMat;
+
+protected:
+	bool onSegment(Point p, Point q, Point r);
+
+	int orientation(Point p, Point q, Point r);
+
+	bool doIntersect(Point p1, Point q1, Point p2, Point q2);
+
+	bool isInside(TArray<Point> polygon, int n, Point p);
+
+public:
+	void SetArea(class AConnectStick* NewConnectStick);
+
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	void SetAreaMaterial(AW1Point* Point);
+
 };
 
 

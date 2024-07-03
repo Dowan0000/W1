@@ -4,10 +4,13 @@
 #include "Stick.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
+#include "W1Character.h"
 #include "StickPre.h"
 #include "ConnectStick.h"
 #include "ConnectStickPre.h"
+#include "W1GameMode.h"
 
 AStick::AStick()
 {
@@ -32,6 +35,8 @@ void AStick::BeginPlay()
 
 	BotSphere->OnComponentBeginOverlap.AddDynamic(this, &AStick::OnBotSphereBeginOverlap);
 	BotSphere->OnComponentEndOverlap.AddDynamic(this, &AStick::OnBotSphereEndOverlap);
+
+	
 }
 
 void AStick::Tick(float DeltaTime)
@@ -43,6 +48,15 @@ void AStick::Tick(float DeltaTime)
 
 void AStick::OnTopSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (OtherActor == this) return;
+
+	AConnectStick* ConnectStick = Cast<AConnectStick>(OtherActor);
+	if (ConnectStick)
+	{
+		if (ConnectSticks.Contains(ConnectStick)) return;
+
+		ConnectSticks.Add(ConnectStick);
+	}
 }
 
 void AStick::OnBotSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -91,9 +105,19 @@ void AStick::ReqSpawnConnectStick_Implementation(FVector Loc, FRotator Rot)
 void AStick::ResSpawnConnectStick_Implementation(FVector Loc, FRotator Rot)
 {
 	if (ConnectStickClass == nullptr) return;
+	if (Character == nullptr) return;
 
 	FActorSpawnParameters SpawnParameter;
-	GetWorld()->SpawnActor<AConnectStick>(ConnectStickClass, Loc, Rot, SpawnParameter);
+
+	AConnectStick* ConnectStick = GetWorld()->SpawnActor<AConnectStick>(ConnectStickClass, Loc, Rot, SpawnParameter);
+	ConnectStick->SetCharacter(Character);
+
+	// ConnectSticks.Num() >= 2 일때, 타이밍 이슈 가능성
+	//Character->CheckArea(ConnectStick);
+
+	AW1GameMode* GameMode = Cast<AW1GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (GameMode)
+		GameMode->SetArea(ConnectStick);
 }
 
 void AStick::SpawnConnectStickPre(FVector Location)

@@ -34,6 +34,9 @@ private:
 	class USphereComponent* BotSphere;
 
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class AW1Character* Character;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool bCanSpawnConnectStick;
 
@@ -48,6 +51,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AConnectStickPre> ConnectStickPreClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<AConnectStick*> ConnectSticks;
 
 protected:
 	UFUNCTION()
@@ -70,4 +76,6 @@ protected:
 
 	void SetConnectStickPreTransform();
 
+public:
+	void SetCharacter(AW1Character* NewCharacter) { Character = NewCharacter; }
 };

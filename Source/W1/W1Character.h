@@ -50,17 +50,26 @@ private:
 	class UInputAction* RightMouse;
 
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class AW1GameMode* W1GameMode;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stick, meta = (AllowPrivateAccess = "true"))
 	class AStickPre* StickPre;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stick, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AStickPre> StickPreClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stick, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stick, meta = (AllowPrivateAccess = "true"))
 	bool bIsBuilding;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stick, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AStick> StickClass;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stick, meta = (AllowPrivateAccess = "true"))
+	TArray<class AConnectStick*> ConnectSticks;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stick, meta = (AllowPrivateAccess = "true"))
+	TArray<FVector> StickLocations;
 
 protected:
 	void Move(const FInputActionValue& Value);
@@ -91,5 +100,6 @@ public:
 	
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	void CheckArea(AConnectStick* NewConnectStick);
 };
 
