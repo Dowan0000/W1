@@ -33,18 +33,24 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* NextSphere;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
-	class UBoxComponent* BoxCollision;
-
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class AW1Character* Character;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class AStick* PreStick;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class AStick* NextStick;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<AConnectStick*> PreConnectSticks;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<AConnectStick*> NextConnectSticks;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bIsVisited;
 
 protected:
 	UFUNCTION()
@@ -61,4 +67,10 @@ public:
 
 	FORCEINLINE class TArray<AConnectStick*> GetPreConnectSticks() const { return PreConnectSticks; }
 	FORCEINLINE class TArray<AConnectStick*> GetNextConnectSticks() const { return NextConnectSticks; }
+
+	FORCEINLINE class AStick* GetPreStick() const { return PreStick; }
+	FORCEINLINE class AStick* GetNextStick() const { return NextStick; }
+
+	FORCEINLINE bool GetIsVisited() const { return bIsVisited; }
+	void SetIsVisited(bool NewVisited) { bIsVisited = NewVisited; }
 };

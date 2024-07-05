@@ -217,3 +217,9 @@ void AW1Character::CheckArea(AConnectStick* NewConnectStick)
 
 	//W1GameMode->SetArea(this, ConnectSticks);
 }
+
+void AW1Character::InitialConnectSticksVisited()
+{
+	for (auto& ConnectStick : ConnectSticks)
+		ConnectStick->SetIsVisited(false);
+}

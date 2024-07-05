@@ -101,5 +101,8 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	void CheckArea(AConnectStick* NewConnectStick);
+
+	void AddConnectSticks(AConnectStick* NewConnectStick) { ConnectSticks.Add(NewConnectStick); }
+	void InitialConnectSticksVisited();
 };
 

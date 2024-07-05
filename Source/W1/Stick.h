@@ -55,6 +55,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<AConnectStick*> ConnectSticks;
 
+	FTimerHandle StartTimer;
+
 protected:
 	UFUNCTION()
 	void OnTopSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -76,6 +78,11 @@ protected:
 
 	void SetConnectStickPreTransform();
 
+	void StartFenceCheck();
+
 public:
 	void SetCharacter(AW1Character* NewCharacter) { Character = NewCharacter; }
+
+	FORCEINLINE TArray<AConnectStick*> GetConnectSticks() const { return ConnectSticks; }
+
 };

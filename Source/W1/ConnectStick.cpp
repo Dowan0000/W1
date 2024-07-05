@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 
 #include "W1Character.h"
+#include "Stick.h"
 
 AConnectStick::AConnectStick()
 {
@@ -15,13 +16,11 @@ AConnectStick::AConnectStick()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	PreSphere = CreateDefaultSubobject<USphereComponent>(TEXT("PreSphere"));
 	NextSphere = CreateDefaultSubobject<USphereComponent>(TEXT("NextSphere"));
-	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 
 	SetRootComponent(Root);
 	Mesh->SetupAttachment(Root);
 	PreSphere->SetupAttachment(Mesh);
 	NextSphere->SetupAttachment(Mesh);
-	BoxCollision->SetupAttachment(Mesh);
 }
 
 void AConnectStick::BeginPlay()
@@ -48,7 +47,13 @@ void AConnectStick::OnPreSphereBeginOverlap(UPrimitiveComponent* OverlappedCompo
 		if (PreConnectSticks.Contains(PreConnectStick)) return;
 
 		PreConnectSticks.Add(PreConnectStick);
+
+		return;
 	}
+
+	AStick* Stick = Cast<AStick>(OtherActor);
+	if (Stick)
+		PreStick = Stick;
 }
 
 void AConnectStick::OnNextSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -61,6 +66,12 @@ void AConnectStick::OnNextSphereBeginOverlap(UPrimitiveComponent* OverlappedComp
 		if (NextConnectSticks.Contains(NextConnectStick)) return;
 
 		NextConnectSticks.Add(NextConnectStick);
+
+		return;
 	}
+
+	AStick* Stick = Cast<AStick>(OtherActor);
+	if (Stick)
+		NextStick = Stick;
 }
 

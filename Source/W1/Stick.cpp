@@ -36,7 +36,8 @@ void AStick::BeginPlay()
 	BotSphere->OnComponentBeginOverlap.AddDynamic(this, &AStick::OnBotSphereBeginOverlap);
 	BotSphere->OnComponentEndOverlap.AddDynamic(this, &AStick::OnBotSphereEndOverlap);
 
-	
+	// 추후 수정?
+	GetWorld()->GetTimerManager().SetTimer(StartTimer, this, &AStick::StartFenceCheck, 0.1f);
 }
 
 void AStick::Tick(float DeltaTime)
@@ -112,12 +113,14 @@ void AStick::ResSpawnConnectStick_Implementation(FVector Loc, FRotator Rot)
 	AConnectStick* ConnectStick = GetWorld()->SpawnActor<AConnectStick>(ConnectStickClass, Loc, Rot, SpawnParameter);
 	ConnectStick->SetCharacter(Character);
 
+	Character->AddConnectSticks(ConnectStick);
+
 	// ConnectSticks.Num() >= 2 일때, 타이밍 이슈 가능성
 	//Character->CheckArea(ConnectStick);
 
-	AW1GameMode* GameMode = Cast<AW1GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	/*AW1GameMode* GameMode = Cast<AW1GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	if (GameMode)
-		GameMode->SetArea(ConnectStick);
+		GameMode->SetArea(ConnectStick);*/
 }
 
 void AStick::SpawnConnectStickPre(FVector Location)
@@ -153,4 +156,17 @@ void AStick::SetConnectStickPreTransform()
 	FRotator Rot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), StickPre->GetActorLocation());
 
 	ConnectStickPre->SetActorLocationAndRotation(Loc, Rot);
+}
+
+void AStick::StartFenceCheck()
+{
+	if (ConnectSticks.Num() < 2) return;
+	if (Character == nullptr) return;
+
+	// 수정?
+	AW1GameMode* GameMode = Cast<AW1GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (GameMode)
+		GameMode->SetArea(this, ConnectSticks[0]);
+
+	Character->InitialConnectSticksVisited();
 }

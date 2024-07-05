@@ -25,8 +25,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<class AConnectStick*> ConnectSticks;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	bool bSetMat;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bSetMat;*/
+
+	TArray<Point> Polygons;
 
 protected:
 	bool onSegment(Point p, Point q, Point r);
@@ -38,9 +40,14 @@ protected:
 	bool isInside(TArray<Point> polygon, int n, Point p);
 
 public:
-	void SetArea(class AConnectStick* NewConnectStick);
+	//void SetArea(class AConnectStick* NewConnectStick);
+	void SetArea(class AStick* NewStick, AConnectStick* NewConnectStick);
+
+	bool SetAreaLoop(AStick* StartStick, AStick* CurStick, AConnectStick* CurConnectStick);
 
 protected:
+	void AddPolygons(bool IsNextStick, AConnectStick* CurConnectStick);
+
 	UFUNCTION(BlueprintNativeEvent)
 	void SetAreaMaterial(AW1Point* Point);
 
